@@ -58,6 +58,25 @@ risk_flags = pd.DataFrame({
 })
 risk_flags['Flag'] = risk_flags['Error (%)'].apply(lambda x: '🚨 High Risk' if abs(x) > 5 else '✔️ Normal')
 
+st.subheader("🏢 Industry Peer Benchmarking")
+
+industry_avg_growth = 0.04
+last_actual = revenue.iloc[-1]
+last_forecast = forecast_mean[-1]
+starbucks_growth = (last_forecast - last_actual) / last_actual
+
+st.write(f"📈 Starbucks Forecasted Growth: {starbucks_growth:.2%}")
+st.write(f"🏷️ Industry Average Growth: {industry_avg_growth:.2%}")
+
+if starbucks_growth > industry_avg_growth + 0.02:
+    benchmark_flag = "⚠️ Starbucks forecast exceeds industry average by more than 2%. Review for potential overstatement."
+elif starbucks_growth < industry_avg_growth - 0.02:
+    benchmark_flag = "ℹ️ Starbucks forecast is below industry average. This may indicate conservative assumptions or lower performance expectations."
+else:
+    benchmark_flag = "✅ Starbucks forecast is aligned with industry averages."
+
+st.markdown(f"**{benchmark_flag}**")
+
 # --- Visualization: Forecast vs Actual ---
 st.subheader("📈 ARIMAX Revenue Forecast vs Actual")
 fig1, ax1 = plt.subplots()
