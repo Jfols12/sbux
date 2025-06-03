@@ -101,11 +101,31 @@ st.pyplot(fig2)
 # --- Summary ---
 high_risk_2023 = risk_flags.loc['2023-01-01':]
 high_risk_count = (high_risk_2023['Flag'] == '🚨 High Risk').sum()
+avg_error_2023 = high_risk_2023['Error (%)'].mean()
 
-st.markdown(f"""### 📌 Summary for Audit Committee
-This app applies an ARIMAX model using CPI (set to {cpi_input:.2f}), average ticket size ({avg_ticket_input:.2f}), and transaction volume ({txn_input}) to forecast Starbucks revenue in 2023. Forecasted values are benchmarked against reported revenue, with risk flags issued for deviations exceeding 5%.
+if high_risk_count == 0:
+    summary_text = f"""### 📌 Summary for Audit Committee
+No high-risk quarters were identified in 2023. The ARIMAX forecast using CPI ({cpi_input:.2f}), avg ticket ({avg_ticket_input:.2f}), and transactions ({txn_input}) closely aligns with reported revenue.
 
-In 2023, the model identified **{high_risk_count} quarter(s)** where forecasted revenue deviated materially from actuals. These variances may represent potential revenue overstatement risks and should be examined closely in the audit process. The flagged quarters shows revenue growth not supported by input growth (e.g., flat CPI or avg ticket), warranting further audit scrutiny.
+This consistency suggests that Starbucks' reported revenue is well-supported by key economic and operational inputs. The regression model further confirms this by showing minimal variance between expected and actual revenues across all quarters. The observed alignment between revenue growth and input growth patterns strengthens the case for reliability in reported figures.
 
-Auditors should focus on these flagged quarters and evaluate whether reported revenue aligns with sales activity and customer behavior. Pay particular attention to periods where revenue grows significantly faster than CPI or average ticket size, which could signal aggressive or premature revenue recognition.
-""")
+Based on this evidence, there is no indication of revenue overstatement in the reviewed period, and the financial reporting appears to reflect the underlying business conditions accurately.
+"""
+elif high_risk_count == 1:
+    summary_text = f"""### 📌 Summary for Audit Committee
+One high-risk quarter was flagged in 2023 where actual revenue materially exceeded forecasted values. The model, based on CPI ({cpi_input:.2f}), avg ticket ({avg_ticket_input:.2f}), and transactions ({txn_input}), generally aligns well otherwise.
+
+The presence of a single significant deviation warrants targeted scrutiny. Auditors should consider whether temporary operational or macroeconomic anomalies might explain the gap. If no external justification is found, this deviation could indicate a timing or estimation error in revenue recognition.
+
+While not indicative of widespread overstatement, this anomaly suggests the need for further documentation and review of revenue policies for the flagged quarter.
+"""
+else:
+    summary_text = f"""### 📌 Summary for Audit Committee
+{high_risk_count} high-risk quarters were flagged in 2023 with an average deviation of {avg_error_2023:.2f}%. Forecasts based on CPI ({cpi_input:.2f}), avg ticket ({avg_ticket_input:.2f}), and transactions ({txn_input}) showed persistent misalignment with reported revenue.
+
+Such repeated deviations raise substantial concern about potential overstatement of revenue. The regression model also reflects a breakdown in the relationship between operational drivers and reported figures, especially where revenue growth far exceeds changes in underlying inputs.
+
+Auditors should investigate these flagged quarters thoroughly, focusing on revenue recognition timing, estimates, and the validity of recorded transactions. Evidence of revenue recognition that outpaces business activity may warrant extended testing and disclosure consideration.
+"""
+
+st.markdown(summary_text)
