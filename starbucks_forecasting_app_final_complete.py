@@ -105,9 +105,7 @@ high_risk_count = (high_risk_2023['Flag'] == '🚨 High Risk').sum()
 st.markdown(f"""### 📌 Summary for Audit Committee
 This app applies an ARIMAX model using CPI (set to {cpi_input:.2f}), average ticket size ({avg_ticket_input:.2f}), and transaction volume ({txn_input}) to forecast Starbucks revenue in 2023. Forecasted values are benchmarked against reported revenue, with risk flags issued for deviations exceeding 5%.
 
-In 2023, the model identified **{high_risk_count} quarter(s)** where forecasted revenue deviated materially from actuals. These variances may represent potential revenue overstatement risks and should be examined closely in the audit process.
-
-The regression model, using the same input drivers, indicates that actual revenue generally tracks well with expectations. This suggests that revenue reporting is largely consistent with economic and operational inputs. However, if any flagged quarter shows revenue growth not supported by input growth (e.g., flat CPI or avg ticket), it warrants further audit scrutiny.
+In 2023, the model identified **{high_risk_count} quarter(s)** where forecasted revenue deviated materially from actuals. These variances may represent potential revenue overstatement risks and should be examined closely in the audit process. The flagged quarters shows revenue growth not supported by input growth (e.g., flat CPI or avg ticket), warranting further audit scrutiny.
 
 Auditors should focus on these flagged quarters and evaluate whether reported revenue aligns with sales activity and customer behavior. Pay particular attention to periods where revenue grows significantly faster than CPI or average ticket size, which could signal aggressive or premature revenue recognition.
 """)
